@@ -1,8 +1,16 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import pandas as pd
 from quantum_model import QuantumLayer
 
+# Load the dataset
+df = pd.read_csv("../data/train_data.csv")
+X_train = torch.tensor(df[["x1", "x2"]].values, dtype=torch.float32)
+y_train = torch.tensor(df["y"].values.reshape(-1, 1), dtype=torch.float32)
+
+
+# Define Hybrid Quantum-Classical Model
 class HybridModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -13,13 +21,13 @@ class HybridModel(nn.Module):
         q_out = self.quantum(x)
         return self.fc(q_out)
 
+
+# Initialize Model
 model = HybridModel()
 optimizer = optim.Adam(model.parameters(), lr=0.01)
 loss_fn = nn.MSELoss()
 
-X_train = torch.tensor([[0,0], [0,1], [1,0], [1,1]], dtype=torch.float32)
-y_train = torch.tensor([[0], [1], [1], [0]], dtype=torch.float32)
-
+# Training Loop
 for epoch in range(100):
     optimizer.zero_grad()
     outputs = model(X_train)

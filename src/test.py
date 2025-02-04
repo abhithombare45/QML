@@ -1,6 +1,14 @@
 import torch
+import pandas as pd
 from quantum_model import QuantumLayer
 
+# Load test data
+df_test = pd.read_csv("../data/test_data.csv")
+X_test = torch.tensor(df_test[["x1", "x2"]].values, dtype=torch.float32)
+y_test = torch.tensor(df_test["y"].values.reshape(-1, 1), dtype=torch.float32)
+
+
+# Define Hybrid Model (Same as training)
 class HybridModel(torch.nn.Module):
     def __init__(self):
         super().__init__()
@@ -11,10 +19,14 @@ class HybridModel(torch.nn.Module):
         q_out = self.quantum(x)
         return self.fc(q_out)
 
+
+# Load Trained Model
 model = HybridModel()
 model.load_state_dict(torch.load("../results/model_checkpoints/qnn_model.pth"))
 model.eval()
 
-test_input = torch.tensor([[0, 1]], dtype=torch.float32)
-prediction = model(test_input).detach().numpy()
-print(f"🔮 Quantum AI Prediction for {test_input.tolist()[0]}: {prediction[0][0]:.3f}")
+# Make Predictions
+predictions = model(X_test).detach().numpy()
+print("\n🔮 Quantum AI Predictions:")
+for i, (inp, pred) in enumerate(zip(X_test.tolist(), predictions)):
+    print(f"Input: {inp} → Predicted: {pred[0]:.3f} | Actual: {y_test[i].item()}")
