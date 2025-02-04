@@ -31,4 +31,12 @@ quantum_ai_project/
 │── README.md                  # Project description ✅  
 │── requirements.txt           # Dependencies ✅  
 │── run.sh                     # Shell script to run the project ✅  
-│── venv/                      # Virtual environment ✅  
+│── venv/                      # Virtual environment ✅ 
+
+
+	1.	metrics.txt → Saves loss, accuracy, and evaluation metrics.
+	2.	hyperparams.json → Stores hyperparameter settings for reproducibility.
+	3.	Modify train.py → Save hyperparameters & log training progress.
+	4.	Modify test.py → Save evaluation metrics to metrics.txt.
+
+ 
